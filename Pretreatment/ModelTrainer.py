@@ -64,4 +64,4 @@ class ModelTrainer(ConfigLoader):
         print(f"Y_train shape = {y_train.shape}")
         print(f"Y_true shape = {y_true.shape}")
 
-        return (x_train.values, y_train.values, x_test.values, y_true.values)
+        return x_train.values, y_train.values, x_test.values, y_true.values
