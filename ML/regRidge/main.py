@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class RidgeRegression:
+class RidgeRegressionCustom:
     # pour tout les codes suivants, nous allons utiliser l'opétateur @, qui est l'opérateur de multiplication de matrice
     def __init__(self, alpha=1.0):
         """

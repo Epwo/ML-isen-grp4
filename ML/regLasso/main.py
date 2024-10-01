@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class LassoRegression:
+class LassoRegressionCustom:
     def __init__(self, alpha=0.01, learning_rate=0.01, iterations=1000):
         """
         Initialisation du modèle LASSO
