@@ -10,10 +10,13 @@ sys.path.append(PROJECT_PATH)
 SRC_PATH = Path(__file__).resolve().parents[0]
 sys.path.append(str(SRC_PATH))
 
+# imports customs functions
 from ML.regLasso.main import LassoRegression
+from ML.regRidge.main import RidgeRegression
+# import customs pretreatment functions
 from Pretreatment.ModelTrainer import ModelTrainer
 
-modellList = [LassoRegression]
+modellList = [LassoRegression, RidgeRegression]
 
 
 class Runner:
@@ -23,11 +26,11 @@ class Runner:
     def run(self):
         x_train, y_train, x_test, y_true = self.modeltrainer.process_data()
 
-        for model in modellList:
+        for model in modellList[1:]:
             model = model()
-            model.fit(x_train,y_train)
+            model.fit(x_train, y_train)
             y_pred = model.predict(x_test)
-            print(r2_score(y_pred=y_pred,y_true=y_true))
+            print(r2_score(y_pred=y_pred, y_true=y_true))
 
 
 if __name__ == "__main__":

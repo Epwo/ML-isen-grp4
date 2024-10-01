@@ -8,7 +8,7 @@
         "activate":false
     },
     "regression":{
-        "target":"Vvit9",
+        "target":"maxO3v",
         "files":"ozone_complet.txt",
         "delimiter": ";",
         "activate":true
