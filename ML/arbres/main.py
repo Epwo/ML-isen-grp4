@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-class DecisionTree:
+class KDThree:
     def __init__(self):
         self.tree = None
 
@@ -69,13 +69,13 @@ if __name__ == "__main__":
     X = df.drop(columns='Jouer')
     y = df['Jouer']
 
-    dt = DecisionTree()
+    dt = KDThree()
     dt.fit(X, y)
 
     new_data = pd.DataFrame({
-        'Température': ['Chaud', 'Froid'],
-        'Humidité': ['Normale', 'Haute'],
-        'Vent': ['Oui', 'Non']
+        'Température': ['Chaud', 'Froid', 'Chaud'],
+        'Humidité': ['Normale', 'Haute', 'Normale'],
+        'Vent': ['Oui', 'Non', 'Oui']
     })
     predictions = dt.predict(new_data)
     print(predictions)
