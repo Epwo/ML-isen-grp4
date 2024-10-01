@@ -5,7 +5,7 @@ __pycache__/
 .idea
 .venv
 
-ML/reg-ridge/cc.py
+ML/regRidge/cc.py
 
 # C extensions
 *.so
