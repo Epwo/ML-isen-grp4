@@ -3,14 +3,15 @@ import pandas as pd
 
 class SupportVectorMachine:
 
-    def __init__(self, df):
+    def __init__(self, df, df_cible):
         self.df = df
-        self.population = None
-        self.price = None
+        self.df_cible = df_cible
+        self.data = []
 
-    def extractData(self):
-        self.population = self.df["population"]
-        self.price = self.df["Price"]
+    def
+
+    def equation(self):
+        pass
 
     def predict(self):
         pass
