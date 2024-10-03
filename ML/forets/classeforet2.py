@@ -1,4 +1,4 @@
-from arbre import KDThree
+from arbre import KDTree
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 
 
-class RandomForest(KDThree):
+class RandomForest(KDTree):
     def __init__(self, n_estimators=100, max_depth=None):
         super().__init__()
         # nombre d'arbres
@@ -33,7 +33,7 @@ class RandomForest(KDThree):
             feature_subset = np.random.choice(X.columns, int(np.sqrt(X.shape[1])), replace=False)
 
             # entraînement de l'arbre
-            tree = KDThree()
+            tree = KDTree()
             tree.fit(X_boot[feature_subset], y_boot)
 
             # ajout de l'abre à la forêt
