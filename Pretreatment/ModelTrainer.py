@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 
 PROJECT_PATH = Path(__file__).parents[1]
 sys.path.append(PROJECT_PATH)
@@ -18,6 +19,13 @@ class ModelTrainer(ConfigLoader):
         super().__init__()
         self.dataframe = self.get_dataframe()
         self.target = self.config["target"]
+
+    def categorize(self,data):
+        string_columns = data.select_dtypes(include=['object']).columns.tolist()
+        label_encoder = LabelEncoder()
+        for col in string_columns:
+            data[col] = label_encoder.fit_transform(data[col])
+        return data
 
     def get_dataframe(self):
         file_path = os.path.join(PROJECT_PATH,'data',self.config["files"])
@@ -50,8 +58,8 @@ class ModelTrainer(ConfigLoader):
         Process the data and train the model, returning the scaled training and testing data.
         """
         self.get_dataframe()
-
-        data_train, data_test = self.get_train_test_split(self.dataframe.dropna())
+        df = self.categorize(self.dataframe.dropna())
+        data_train, data_test = self.get_train_test_split(df)
 
         x_train, y_train = self.prepare_data(data_train, is_train=True)
         x_test = self.prepare_data(data_test, is_train=False)
