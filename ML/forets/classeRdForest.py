@@ -4,7 +4,7 @@ from sklearn import tree
 class Foret() :
 
     def __init__(self, n_estimators=100, max_depth=None, min_samples_split=2, 
-                min_samples_leaf=1, min_weight_fraction_leaf=0, max_features="auto",
+                min_samples_leaf=1, min_weight_fraction_leaf=0, max_features=None,
                 max_leaf_nodes=None, min_impurity_decrease=0, random_state=None, 
                 class_weight=None, max_sample=None, max_columns=4):
         
@@ -30,12 +30,14 @@ class Foret() :
         
         for est in range(self._n_estimators) :
             rand_index = np.random.randint(low=0, high=x.shape[0], size=self._max_sample)
-        
+            print(x.shape[0])
             rand_column = np.random.randint(low=0, high=x.shape[1], size=self._max_columns)
-        
+
+            print("la gueule de x : ", x, "rand_index ",rand_index)
+
             x_samp = x[rand_index, :]
             x_samp = x_samp[:, rand_column]
-        
+
             y_samp = y[rand_index]
         
             decision_tree_model = tree.DecisionTreeClassifier(max_depth=self._max_depth, 
@@ -60,7 +62,7 @@ class Foret() :
         
         pred = pred / self._n_estimators
         print(pred)
-        pred = np.where(pred &gt;= 0.5, 1, 0)
+        # pred = np.where(pred &gt;= 0.5, 1, 0)
         
         return pred
 
