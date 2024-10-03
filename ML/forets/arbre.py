@@ -56,26 +56,25 @@ class KDThree:
             tree = tree[feature].get(value, None)
         return tree
 
-#Tests
-if __name__ == "__main__":
-    data = {
-        'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
-        'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
-        'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
-        'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
-    }
-    df = pd.DataFrame(data)
 
-    X = df.drop(columns='Jouer')
-    y = df['Jouer']
+# data = {
+#     'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
+#     'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
+#     'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
+#     'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
+# }
+# df = pd.DataFrame(data)
 
-    dt = KDThree()
-    dt.fit(X, y)
+# X = df.drop(columns='Jouer')
+# y = df['Jouer']
 
-    new_data = pd.DataFrame({
-        'Température': ['Chaud', 'Froid', 'Chaud'],
-        'Humidité': ['Normale', 'Haute', 'Normale'],
-        'Vent': ['Oui', 'Non', 'Oui']
-    })
-    predictions = dt.predict(new_data)
-    print(predictions)
+# dt = KDThree()
+# dt.fit(X, y)
+
+# new_data = pd.DataFrame({
+#     'Température': ['Chaud', 'Froid', 'Chaud'],
+#     'Humidité': ['Normale', 'Haute', 'Normale'],
+#     'Vent': ['Oui', 'Non', 'Oui']
+# })
+# predictions = dt.predict(new_data)
+# print(predictions)
