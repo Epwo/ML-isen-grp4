@@ -37,12 +37,26 @@ class RandomForest(KDThree):
             # ajout de l'abre à la forêt
             self.trees.append(tree)
 
+    # def predict(self, X):
+    #     # la prédiction de la forêt est définie comme la valeur apparaissant le plus de fois dans les prédictions de ses arbres
+    #     predictions = []
+    #     for tree in self.trees:
+    #         predictions.append(tree.predict(X))
+    #         print(tree.predict(X))
+    #         # if np.isnan(tree.predict(X)) :
+    #         #     print("aaaaaaaaaaaaaaaaaa")
+    #         # print(tree.predict(X))
+    #     print(predictions)
+    #     for pred in predictions : 
+    #         print()
+    #     return pd.Series([max(set(p), key=p.count) for p in zip(*predictions)])
+    
     def predict(self, X):
-        # la prédiction de la forêt est définie comme la valeur apparaissant le plus de fois dans les prédictions de ses arbres
         predictions = []
         for tree in self.trees:
             predictions.append(tree.predict(X))
-        return pd.Series([max(set(p), key=p.count) for p in zip(*predictions)])
+        predictions = np.array(predictions).T
+        return pd.Series([pd.Series(p).mode().iloc[0] if not pd.Series(p).isnull().all() else np.nan for p in predictions])
     
 
 df = pd.read_csv('data\Carseats.csv')
