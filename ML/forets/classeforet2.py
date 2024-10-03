@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+
 
 class RandomForest(KDThree):
     def __init__(self, n_estimators=100, max_depth=None):
@@ -36,31 +38,23 @@ class RandomForest(KDThree):
 
             # ajout de l'abre à la forêt
             self.trees.append(tree)
-
-    # def predict(self, X):
-    #     # la prédiction de la forêt est définie comme la valeur apparaissant le plus de fois dans les prédictions de ses arbres
-    #     predictions = []
-    #     for tree in self.trees:
-    #         predictions.append(tree.predict(X))
-    #         print(tree.predict(X))
-    #         # if np.isnan(tree.predict(X)) :
-    #         #     print("aaaaaaaaaaaaaaaaaa")
-    #         # print(tree.predict(X))
-    #     print(predictions)
-    #     for pred in predictions : 
-    #         print()
-    #     return pd.Series([max(set(p), key=p.count) for p in zip(*predictions)])
     
     def predict(self, X):
+
+        # la prédiction de la forêt est définie comme la valeur apparaissant le plus de fois dans les prédictions de ses arbres
         predictions = []
         for tree in self.trees:
             predictions.append(tree.predict(X))
+        # transposée permet d'obtenir le bon format (arbres en colonne et échantillons en ligne)
         predictions = np.array(predictions).T
+
         return pd.Series([pd.Series(p).mode().iloc[0] if not pd.Series(p).isnull().all() else np.nan for p in predictions])
     
 
 df = pd.read_csv('data\Carseats.csv')
-X = df.drop(columns='High')
+
+X = df.drop(['Unnamed: 0','High'],axis= 1)
+X = pd.get_dummies(X)
 y = df['High']
 
 le = LabelEncoder()
@@ -70,28 +64,13 @@ X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2,
 
 rf = RandomForest(n_estimators=100)
 rf.fit(X_train, y_train)
-
 predictions = rf.predict(X_test)
-# for i, pred in enumerate(predictions) : 
-
-#     if np.isnan(pred) :
-#         print(X_test[i],pred)
-# print(predictions)
 
 accuracy = accuracy_score(y_test, predictions)
-print("Accuracy:", accuracy)
+print("Accuracy fait maison: ", accuracy)
 
-# Define your training data
-# data = {
-#     'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
-#     'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
-#     'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
-#     'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
-# }
-# df = pd.DataFrame(data)
-# Make predictions on new data
-# new_data = pd.DataFrame({
-#     'Température': ['Chaud', 'Froid', 'Chaud','Chaud'],
-#     'Humidité': ['Normale', 'Haute', 'Normale','Haute'],
-#     'Vent': ['Oui', 'Non', 'Oui','Oui']
-# })
+clf = RandomForestClassifier()
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy sklearn: ", accuracy)

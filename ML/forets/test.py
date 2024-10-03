@@ -15,13 +15,13 @@ X = df.drop(['Unnamed: 0','High'],axis= 1)
 X = pds.get_dummies(X)
 y = df['High']
 
-foret = Foret()
-foret.fit(X,y)
-y_pred = foret.predict(X)
+# foret = Foret()
+# foret.fit(X,y)
+# y_pred = foret.predict(X)
 
-# clf = RandomForestClassifier(max_depth=2, random_state=0)
-# clf.fit(X, y)
-# y_pred = clf.predict(X)
+clf = RandomForestClassifier(max_depth=2, random_state=0)
+clf.fit(X, y)
+y_pred = clf.predict(X)
 
 print(accuracy_score(y, y_pred))
 
