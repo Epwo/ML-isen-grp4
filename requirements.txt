@@ -10,4 +10,6 @@ scipy==1.13.1
 six==1.16.0
 tenacity==9.0.0
 threadpoolctl==3.5.0
+
+pandas~=2.2.3
 tzdata==2024.2
