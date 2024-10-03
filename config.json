@@ -1,16 +1,14 @@
 {
     "classification":{
         "target":"High",
-        "yes":8,
-        "no":8,
         "files":"Carseats.csv",
         "delimiter": ",",
-        "activate":false
+        "activate":true
     },
     "regression":{
-        "target":"Vvit9",
+        "target":"maxO3v",
         "files":"ozone_complet.txt",
         "delimiter": ";",
-        "activate":true
+        "activate":false
     }
 }
