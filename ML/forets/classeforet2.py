@@ -5,6 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 
 class RandomForest(KDTree):
@@ -33,7 +34,10 @@ class RandomForest(KDTree):
             feature_subset = np.random.choice(X.columns, int(np.sqrt(X.shape[1])), replace=False)
 
             # entraînement de l'arbre
-            tree = KDTree()
+            # tree = KDTree()
+            # tree.fit(X_boot[feature_subset], y_boot)
+
+            tree = DecisionTreeClassifier()
             tree.fit(X_boot[feature_subset], y_boot)
 
             # ajout de l'abre à la forêt
@@ -51,26 +55,64 @@ class RandomForest(KDTree):
         return pd.Series([pd.Series(p).mode().iloc[0] if not pd.Series(p).isnull().all() else np.nan for p in predictions])
     
 
-df = pd.read_csv('data\Carseats.csv')
+        # Tests
+if __name__ == "__main__":
+    data = {
+        'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
+        'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
+        'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
+        'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
+    }
+    df = pd.DataFrame(data)
 
-X = df.drop(['Unnamed: 0','High'],axis= 1)
-X = pd.get_dummies(X)
-y = df['High']
+    X = df.drop(columns='Jouer')
+    y = df['Jouer'].map({'Non': 0, 'Oui': 1})  # Convertir les étiquettes en entiers
 
-le = LabelEncoder()
-y_encoded = pd.Series(le.fit_transform(y))
+    X_encoded = pd.get_dummies(X, drop_first=True)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
+    # Initialiser et entraîner l'arbre KD avec une profondeur maximale de 2
+    dt = KDTree(max_depth=2, k=3)  # Utiliser les 3 voisins les plus proches
+    dt.fit(X_encoded, y)
 
-rf = RandomForest(n_estimators=100)
-rf.fit(X_train, y_train)
-predictions = rf.predict(X_test)
+    rf = RandomForest(n_estimators=100)
+    rf.fit(X_encoded, y)
 
-accuracy = accuracy_score(y_test, predictions)
-print("Accuracy fait maison: ", accuracy)
+    new_data = pd.DataFrame({
+        'Température': ['Chaud', 'Froid'],
+        'Humidité': ['Normale', 'Haute'],
+        'Vent': ['Oui', 'Non']
+    })
 
-clf = RandomForestClassifier()
-clf.fit(X_train, y_train)
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy sklearn: ", accuracy)
+    new_data_encoded = pd.get_dummies(new_data, drop_first=True)
+
+    predictions = dt.predict(new_data_encoded)
+    print(predictions)
+
+    predictions = rf.predict(new_data_encoded)
+    print(predictions)
+
+
+# df = pd.read_csv('data\Carseats.csv')
+
+# X = df.drop(['Unnamed: 0','High'],axis= 1)
+# X = pd.get_dummies(X)
+
+# y = df['High'].apply(lambda x : 1 if x == 'Yes' else 0)
+# X[X.columns] = X[X.columns].astype(int)
+
+
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+
+# rf = RandomForest(n_estimators=100)
+# rf.fit(X_train, y_train)
+# predictions = rf.predict(X_test)
+
+# accuracy = accuracy_score(y_test, predictions)
+# print("Accuracy fait maison: ", accuracy)
+
+# clf = RandomForestClassifier()
+# clf.fit(X_train, y_train)
+# y_pred = clf.predict(X_test)
+# accuracy = accuracy_score(y_test, y_pred)
+# print("Accuracy sklearn: ", accuracy)

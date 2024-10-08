@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from classeforet2 import RandomForest
 
 class KDTree:
     def __init__(self, max_depth=None, k=2):
@@ -104,32 +105,39 @@ class KDTree:
             # Si c'est un nœud feuille, nous ajoutons seulement l'étiquette
             neighbors.append({'label': node['label'], 'distance': float('inf')})  # Utiliser une distance infinie pour le nœud feuille
 
-#     # Tests
-# if __name__ == "__main__":
-#     data = {
-#         'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
-#         'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
-#         'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
-#         'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
-#     }
-#     df = pd.DataFrame(data)
+    # Tests
+if __name__ == "__main__":
+    data = {
+        'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
+        'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
+        'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
+        'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
+    }
+    df = pd.DataFrame(data)
 
-#     X = df.drop(columns='Jouer')
-#     y = df['Jouer'].map({'Non': 0, 'Oui': 1})  # Convertir les étiquettes en entiers
+    X = df.drop(columns='Jouer')
+    y = df['Jouer'].map({'Non': 0, 'Oui': 1})  # Convertir les étiquettes en entiers
 
-#     X_encoded = pd.get_dummies(X, drop_first=True)
+    X_encoded = pd.get_dummies(X, drop_first=True)
 
-#     # Initialiser et entraîner l'arbre KD avec une profondeur maximale de 2
-#     dt = KDTree(max_depth=2, k=3)  # Utiliser les 3 voisins les plus proches
-#     dt.fit(X_encoded, y)
+    # Initialiser et entraîner l'arbre KD avec une profondeur maximale de 2
+    dt = KDTree(max_depth=2, k=3)  # Utiliser les 3 voisins les plus proches
+    dt.fit(X_encoded, y)
 
-#     new_data = pd.DataFrame({
-#         'Température': ['Chaud', 'Froid'],
-#         'Humidité': ['Normale', 'Haute'],
-#         'Vent': ['Oui', 'Non']
-#     })
+    rf = RandomForest(n_estimators=100)
+    rf.fit(X_encoded, y)
 
-#     new_data_encoded = pd.get_dummies(new_data, drop_first=True)
+    new_data = pd.DataFrame({
+        'Température': ['Chaud', 'Froid'],
+        'Humidité': ['Normale', 'Haute'],
+        'Vent': ['Oui', 'Non']
+    })
 
-#     predictions = dt.predict(new_data_encoded)
-#     print(predictions)
+    new_data_encoded = pd.get_dummies(new_data, drop_first=True)
+
+    predictions = dt.predict(new_data_encoded)
+    print(predictions)
+
+    predictions = rf.predict(new_data_encoded)
+    print(predictions)
+
