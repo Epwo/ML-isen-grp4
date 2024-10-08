@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 import time
 import os
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, accuracy_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import f1_score
@@ -77,12 +77,21 @@ class Runner:
             elif model_info["type"] == "class":
                 acc = accuracy_score(y_true, y_pred)
                 f1 = f1_score(y_true, y_pred, average='weighted')
+                conf_mat = confusion_matrix(y_true, y_pred)
                 results.append({
                     "Model": nameModel,
                     "accuracy": acc,
                     "f1_score": f1,
                     "time": elapsed
                 })
+                # Plot the confusion matrix
+                plt.figure(figsize=(10, 8))
+                sns.heatmap(conf_mat, annot=True, fmt='d', cmap='Blues')
+                plt.xlabel('Predicted')
+                plt.ylabel('Actual')
+                plt.title(f'Confusion Matrix - {nameModel}')
+                plt.savefig(f'figs/confusion_matrix_{nameModel}.png')
+                print(f"Confusion matrix for {nameModel} exported to 'confusion_matrix_{nameModel}.png'.")
 
                 # Select only numeric features for the correlation matrix
                 x_train_trans = self.model_trainer.dataframe.drop(columns=[self.model_trainer.target])
@@ -93,7 +102,7 @@ class Runner:
                 plt.figure(figsize=(10, 8))
                 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
                 plt.title('Correlation Matrix of Training Features')
-                plt.savefig(f"corrMat-{nameModel}.png")
+                plt.savefig(f"figs/corrMat.png")
                 print("Correlation matrix exported to 'corrMat.png'.")
 
         # Create a DataFrame from the results and export to CSV

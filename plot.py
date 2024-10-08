@@ -45,4 +45,4 @@ for group_name, model_names in model_groups.items():
 
     # Save the plot as an image
     print(f"Exporting results_{group_name}.png")
-    plt.savefig(f'results_{group_name}.png')
+    plt.savefig(f'figs/results_{group_name}.png')
