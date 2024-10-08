@@ -20,6 +20,7 @@ from sklearn.tree import DecisionTreeClassifier
 # imports customs functions
 from ML.regLasso.main import LassoRegressionCustom
 from ML.regRidge.main import RidgeRegressionCustom
+from ML.SVM.supportvectormachine import SupportVectorMachineCustom
 # import customs pretreatment functions
 from Pretreatment.ModelTrainer import ModelTrainer
 
@@ -29,7 +30,7 @@ model_list = [
     #{"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
     #{"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
     {"model":SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
-    {"model":SVC, "params": {"kernel":"rbf","random_state":42}, "type": "class"},
+    {"model":SupportVectorMachineCustom, "params": {"learning_rate":0.005,"lambda_param":0.01,"n_iters":2000}, "type": "class"},
     # {"model": DecisionTreeClassifier, "params": {}, "type": "class"}
 
 ]
