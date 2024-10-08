@@ -97,9 +97,6 @@ class Runner:
         keys = param_dist.keys()
         values = [param_dist[key] for key in keys]
         return [dict(zip(keys, v)) for v in product(*values)]
-        # Plotting the correlation matrix using seaborn
-
-
 if __name__ == "__main__":
     runner = Runner()
     runner.run()
