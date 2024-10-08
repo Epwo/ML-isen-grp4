@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+import time
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -23,12 +24,13 @@ from ML.regRidge.main import RidgeRegressionCustom
 from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = [
-    {"model": LassoRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": LassoRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
     {"model":SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
-    {"model": DecisionTreeClassifier, "params": {}, "type": "class"}
+    {"model":SVC, "params": {"kernel":"rbf","random_state":42}, "type": "class"},
+    # {"model": DecisionTreeClassifier, "params": {}, "type": "class"}
 
 ]
 
@@ -47,29 +49,34 @@ class Runner:
             params = model_info.get("params", {})
 
             model = model_class(**params)
+            # start time
+            startT = time.time()
 
             model.fit(x_train, y_train)
             y_pred = model.predict(x_test)
             # calculate metrics
-            mae = mean_absolute_error(y_true, y_pred)
-            mse = mean_squared_error(y_true, y_pred)
-            r2 = r2_score(y_true, y_pred)
-            acc = accuracy_score(y_true, y_pred)
+            elapsed = time.time() - startT
 
             nameModel = model_class.__name__
-            if model_info["type"] == "reg":
+            if model_info["type"] == "regr":
                 # Store results
+                mae = mean_absolute_error(y_true, y_pred)
+                mse = mean_squared_error(y_true, y_pred)
+                r2 = r2_score(y_true, y_pred)
+                print(f"{nameModel} - time {elapsed}")
                 results.append({
                     "Model": nameModel,
                     "MAE": mae,
                     "MSE": mse,
-                    "R2 Score": r2
+                    "R2 Score": r2,
+                    "time": elapsed
                 })
             elif model_info["type"] == "class":
+                acc = accuracy_score(y_true, y_pred)
                 results.append({
                     "Model": nameModel,
-                    "accuracy": acc
-
+                    "accuracy": acc,
+                    "time": elapsed
                 })
 
                 # Select only numeric features for the correlation matrix
@@ -83,7 +90,6 @@ class Runner:
                 plt.title('Correlation Matrix of Training Features')
                 plt.savefig(f"corrMat-{nameModel}.png")
                 print("Correlation matrix exported to 'corrMat.png'.")
-
 
         # Create a DataFrame from the results and export to CSV
         results_df = pd.DataFrame(results)
