@@ -24,11 +24,13 @@ from ML.arbres.main import DecisionTree
 from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = [
-    {"model": DecisionTreeClassifier, "params": {"max_depth": [1, 2, 3, 4, 5], "criterion": ["gini", "entropy"]}, "type": "class"},
+    {"model": DecisionTreeClassifier, "params": {"max_depth": [1, 2, 3, 4, 5], "criterion": ["gini", "entropy"]},
+     "type": "class"},
     {"model": DecisionTree, "params": {"max_depth": [1, 2, 3, 4, 5]}, "type": "class"}
 ]
 
 scalers = [Normalizer(), MinMaxScaler(), StandardScaler(), QuantileTransformer()]
+
 
 class Runner:
     def __init__(self):
@@ -52,7 +54,7 @@ class Runner:
                 for param_values in self._get_param_combinations(param_dist):
                     # Instantiate the model with the current parameter values
                     model_instance = model_class(**param_values)
-                    model_instance.fit(x_train_scaled, y_train)  # Fit the model    
+                    model_instance.fit(x_train_scaled, y_train)  # Fit the model
                     y_pred = model_instance.predict(x_test_scaled)  # Utiliser les données de test
 
                     # Calculate metrics
@@ -95,8 +97,6 @@ class Runner:
         keys = param_dist.keys()
         values = [param_dist[key] for key in keys]
         return [dict(zip(keys, v)) for v in product(*values)]
-                # Plotting the correlation matrix using seaborn
-            
 if __name__ == "__main__":
     runner = Runner()
     runner.run()
