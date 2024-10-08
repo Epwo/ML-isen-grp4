@@ -24,11 +24,12 @@ from ML.regRidge.main import RidgeRegressionCustom
 from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = [
-    {"model": LassoRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
-    # {"model":SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
+    #{"model": LassoRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
+    {"model":SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
+    {"model":SVC, "params": {"kernel":"rbf","random_state":42}, "type": "class"},
     # {"model": DecisionTreeClassifier, "params": {}, "type": "class"}
 
 ]
