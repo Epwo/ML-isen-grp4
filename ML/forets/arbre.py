@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
-from classeforet2 import RandomForest
+import math
+# from classeforet2 import RandomForest
+from sklearn.tree import DecisionTreeClassifier
 
 class KDTree:
     def __init__(self, max_depth=None, k=2):
@@ -81,6 +83,10 @@ class KDTree:
         # Vérifiez si le nœud est une feuille ou un nœud interne
         if 'point' in node:
             # Calculer la distance à ce nœud
+            # print(point)
+            # print('-----------------')
+            # print(node['point'])
+            # print('-----------------')
             distance = np.linalg.norm(point ^ node['point'])
             
             # Ajouter le nœud courant aux voisins
@@ -105,14 +111,76 @@ class KDTree:
             # Si c'est un nœud feuille, nous ajoutons seulement l'étiquette
             neighbors.append({'label': node['label'], 'distance': float('inf')})  # Utiliser une distance infinie pour le nœud feuille
 
+class RandomForest(KDTree):
+    def __init__(self, n_estimators=100, max_depth=None, max_features = 'sqrt',bootstrap = True):
+        super().__init__()
+        # nombre d'arbres
+        self.n_estimators = n_estimators
+        # profondeur maximale pour les arbres
+        self.max_depth = max_depth
+        # nombre maximal de caractéristiques à considérer pour chaque arbre
+        self.max_features = max_features
+        # utilisation d'un bootstrap ou non (si True alors entraînement des arbres sur échantillons, False --> entraînement sur tout le dataset)
+        self.bootstrap = bootstrap
+        # liste contenant les arbres de la forêt
+        self.trees = []
+
+    def fit(self, X, y):
+        # pour chaque arbre
+        for _ in range(self.n_estimators):
+
+            if self.bootstrap == True : 
+                # formation d'échantillons par sélection aléatoire (avec remplacement) des données d'entraînement
+                # index de sélection des données
+                idx = np.random.choice(X.shape[0], X.shape[0], replace=True)
+                # caractéristiques de prédiction
+                X = X.iloc[idx]
+                # caractéristique à prédire
+                y = y.iloc[idx]
+
+            # sélection aléatoire d'un sous ensemble de caractéristiques utilisées pour l'entraînement de l'arbre
+            # remarque : majoration de la taille de ce sous ensemble pour réduire les temps de calcul et diversifier les arbres
+            if self.max_features == 'sqrt' : 
+                feature_subset = np.random.choice(X.columns, int(np.sqrt(X.shape[1])), replace=False)
+            elif self.max_features == 'log2' : 
+                feature_subset = np.random.choice(X.columns, int(math.log2(X.shape[1])), replace=False)
+            elif self.max_features == None : 
+                feature_subset = np.random.choice(X.columns, int(X.shape[1]), replace=False)
+
+            # entraînement de l'arbre
+            tree = KDTree(max_depth = self.max_depth)
+            tree.fit(X[feature_subset], y)
+
+            # tree = DecisionTreeClassifier()
+            # tree.fit(X_boot[feature_subset], y_boot)
+
+            # ajout de l'abre à la forêt
+            self.trees.append(tree)
+    
+    def predict(self, X):
+
+        # la prédiction de la forêt est définie comme la valeur apparaissant le plus de fois dans les prédictions de ses arbres
+        predictions = []
+        for tree in self.trees:
+            predictions.append(tree.predict(X))
+        # transposée permet d'obtenir le bon format (arbres en colonne et échantillons en ligne)
+        predictions = np.array(predictions).T
+        # print(len(predictions[0]),len(predictions[1]),predictions)
+
+        # print(pd.Series([pd.Series(p).mode().iloc[0] if not pd.Series(p).isnull().all() else np.nan for p in predictions]))
+
+        return pd.Series([pd.Series(p).mode().iloc[0] if not pd.Series(p).isnull().all() else np.nan for p in predictions])
+
     # Tests
 if __name__ == "__main__":
-    data = {
-        'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
-        'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
-        'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
-        'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
-    }
+
+    data = {'Température' : [], 'Humidité' : [], 'Vent' : [], 'Jouer' : []}
+    for i in range(10000) : 
+        data['Température'].append(np.random.choice(['Froid','Chaud','Normale']))
+        data['Humidité'].append(np.random.choice(['Haute','Normale']))
+        data['Vent'].append(np.random.choice(['Oui','Non']))
+        data['Jouer'].append(np.random.choice(['Oui','Non']))
+
     df = pd.DataFrame(data)
 
     X = df.drop(columns='Jouer')
@@ -121,7 +189,7 @@ if __name__ == "__main__":
     X_encoded = pd.get_dummies(X, drop_first=True)
 
     # Initialiser et entraîner l'arbre KD avec une profondeur maximale de 2
-    dt = KDTree(max_depth=2, k=3)  # Utiliser les 3 voisins les plus proches
+    dt = KDTree(k=3)  # Utiliser les 3 voisins les plus proches
     dt.fit(X_encoded, y)
 
     rf = RandomForest(n_estimators=100)
@@ -135,9 +203,11 @@ if __name__ == "__main__":
 
     new_data_encoded = pd.get_dummies(new_data, drop_first=True)
 
-    predictions = dt.predict(new_data_encoded)
-    print(predictions)
+    # predictions = dt.predict(new_data_encoded)
+    # print(predictions)
 
     predictions = rf.predict(new_data_encoded)
-    print(predictions)
+    # print(predictions)
+    # for pred in predictions :
+    #     print(pred)
 

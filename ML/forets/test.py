@@ -1,6 +1,27 @@
 import pandas as pd
 from arbre import KDTree
 from classeforet2 import RandomForest
+from sklearn.ensemble import RandomForestClassifier
+import numpy as np
+
+
+clf = RandomForestClassifier()
+# Utilisation de np.random.choice()
+
+print(np.random.choice([1, 2, 3], size=5))
+
+print(np.random.choice([1, 2, 3], size=5))  # résultats différents
+
+
+# Utilisation de numpy.random.RandomState.choice()
+
+rng = np.random.RandomState(42)
+
+print(rng.choice([1, 2, 3], size=5))
+
+print(rng.choice([1, 2, 3], size=5))
+
+print("-----------------------")
 
  # Tests
 if __name__ == "__main__":
@@ -39,19 +60,6 @@ if __name__ == "__main__":
     print(predictions)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 # from classeRdForest import Foret
 # import numpy as np
 # import pandas as pds
@@ -78,6 +86,8 @@ if __name__ == "__main__":
 # y_pred = clf.predict(X)
 
 # print(accuracy_score(y, y_pred))
+
+
 
 
 
