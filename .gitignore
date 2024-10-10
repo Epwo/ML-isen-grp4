@@ -8,6 +8,7 @@ __pycache__/
 figs/
 
 ML/regRidge/cc.py
+model_comparison_results.csv
 
 # C extensions
 *.so

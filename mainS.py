@@ -41,7 +41,8 @@ model_list = [
     {"model": SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
     {"model": SupportVectorMachineCustom, "params": {"learning_rate":0.005,"lambda_param":0.01,"n_iters":2000}, "type": "class"},
     {"model": DecisionTreeClassifier, "params": {}, "type": "class"},
-    {"model": RandomForestClassifier, "params": {"max_depth": 2,"random_state":42}, "type": "class"}
+    {"model": RandomForestClassifier, "params": {"max_depth": 2,"random_state":42}, "type": "class"},
+    {"model": RandomForestClassifier, "params": {"max_depth": 3,"random_state":42}, "type": "class"},
 
 ]
 
