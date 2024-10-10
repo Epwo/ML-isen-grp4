@@ -1,0 +1,7 @@
+Model,Scaler,Params,Accuracy,accuracy,f1_score
+DecisionTreeClassifier,QuantileTransformer,"{'max_depth': 10, 'criterion': 'entropy'}",0.6,0.6,0.6
+DecisionTree,QuantileTransformer,{'max_depth': 10},0.65,0.65,0.6484203739522889
+SVC,QuantileTransformer,"{'kernel': 'poly', 'random_state': 2024}",0.825,0.825,0.825
+SupportVectorMachineCustom,QuantileTransformer,"{'learning_rate': 0.005, 'lambda_param': 0.01, 'n_iters': 2000}",0.75,0.75,0.7376373626373626
+RandomForestClassifier,QuantileTransformer,"{'n_estimators': 100, 'max_depth': 2}",0.775,0.775,0.7606918238993711
+RandomForest,QuantileTransformer,"{'n_estimators': 100, 'max_depth': 2}",0.6875,0.6875,0.6300437288809382
