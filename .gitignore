@@ -5,6 +5,10 @@ __pycache__/
 .idea
 .venv
 
+figs/
+
+ML/regRidge/cc.py
+
 # C extensions
 *.so
 
