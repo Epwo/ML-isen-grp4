@@ -1,7 +1,9 @@
+
 import numpy as np
 import pandas as pd
 
 
+# implémenter le warm_start et random state
 class DecisionTree:
     def __init__(self, max_depth=2):
         self.max_depth = max_depth  # Profondeur maximale de l'arbre
@@ -28,9 +30,10 @@ class DecisionTree:
             
         if len(X) != len(y):
             raise ValueError("Les dimensions de X et y doivent correspondre.")
-
-        if np.any(np.isnan(X)) or np.any(np.isnan(y)):
-            raise ValueError("Les données ne doivent pas contenir de valeurs manquantes.")
+        # print(X) 
+        # print(y)
+        # if np.any(np.isnan(X)) or np.any(np.isnan(y)):
+        #     raise ValueError("Les données ne doivent pas contenir de valeurs manquantes.")
 
         self.tree = self._build_tree(X, y)
 
@@ -109,33 +112,93 @@ class DecisionTree:
             return self._predict_one(node['left'], point)
         else:
             return self._predict_one(node['right'], point)
+            
 
-# Tests
+class RandomForest(DecisionTree):
+    def __init__(self, n_estimators=100, max_depth=2, max_features='sqrt', bootstrap=True, warm_start=False, random_state=None):
+        super().__init__()
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.max_features = max_features
+        self.bootstrap = bootstrap
+        self.warm_start = warm_start
+        self.random_state = np.random.RandomState(random_state) if random_state is not None else None
+        self.trees = []
+        self.dic = {}
+
+    def check_params(self):
+        if type(self.n_estimators) != int or self.n_estimators < 1:
+            raise ValueError("Le paramètre n_estimators doit être un entier supérieur à zéro")
+        if type(self.max_depth) != int or self.max_depth < 1:
+            raise ValueError("Le paramètre max_depth doit être un entier supérieur à zéro")
+        if self.max_features not in ['sqrt', 'log2', None]:
+            raise ValueError("Le paramètre max_features doit prendre une des valeurs comprise dans la liste ['sqrt', 'log2', None]")
+        if type(self.bootstrap) != bool:
+            raise ValueError("Le paramètre bootstrap doit être un booléen")
+        if type(self.warm_start) != bool:
+            raise ValueError("Le paramètre warm_start doit être un booléen")
+        if self.random_state is not None and not isinstance(self.random_state, np.random.RandomState):
+            raise ValueError("Le paramètre random_state doit être égal à None ou un objet RandomState")
+
+    def fit(self, X, y):
+        self.check_params()
+        X = np.array(X)  # Conversion en tableau numpy
+        y = np.array(y)
+
+        for i in range(self.n_estimators):
+            if self.bootstrap:
+                idx = self.random_state.choice(X.shape[0], X.shape[0], replace=True) if self.random_state else np.random.choice(X.shape[0], X.shape[0], replace=True)
+                X_sample, y_sample = X[idx], y[idx]
+            else:
+                X_sample, y_sample = X, y
+
+            # Sélection des caractéristiques
+            if self.max_features == 'sqrt':
+                feature_subset = self.random_state.choice(X.shape[1], int(np.sqrt(X.shape[1])), replace=False) if self.random_state else np.random.choice(X.shape[1], int(np.sqrt(X.shape[1])), replace=False)
+            elif self.max_features == 'log2':
+                feature_subset = self.random_state.choice(X.shape[1], int(np.log2(X.shape[1])), replace=False) if self.random_state else np.random.choice(X.shape[1], int(np.log2(X.shape[1])), replace=False)
+            else:
+                feature_subset = np.arange(X.shape[1])
+
+            # Entraînement de l'arbre
+            tree = DecisionTree()
+            tree.fit(X_sample[:, feature_subset], y_sample)
+
+            # Ajout de l'arbre à la forêt
+            self.trees.append(tree)
+            self.dic[i] = feature_subset
+
+    def predict(self, X):
+        X = np.array(X)  # Conversion en tableau numpy
+        predictions = []
+
+        for i, tree in enumerate(self.trees):
+            X_tmp = X[:, self.dic[i]]  # Sélection des caractéristiques
+            predictions.append(tree.predict(X_tmp))
+
+        predictions = np.array(predictions).T
+
+        # Calcul de la prédiction finale
+        final_predictions = [int(np.bincount(pred).argmax()) for pred in predictions]
+        return final_predictions
+
+    
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
 if __name__ == "__main__":
-    data = {
-        'Température': ['Chaud', 'Chaud', 'Froid', 'Froid', 'Chaud', 'Froid', 'Chaud'],
-        'Humidité': ['Haute', 'Haute', 'Normale', 'Normale', 'Normale', 'Haute', 'Normale'],
-        'Vent': ['Non', 'Oui', 'Non', 'Oui', 'Oui', 'Oui', 'Non'],
-        'Jouer': ['Non', 'Non', 'Oui', 'Oui', 'Oui', 'Non', 'Oui']
-    }
-    df = pd.DataFrame(data)
 
-    X = df.drop(columns='Jouer')
-    y = df['Jouer'].map({'Non': 0, 'Oui': 1})  # Convertir les étiquettes en entiers
+    df = pd.read_csv("data\\Carseats.csv")
 
+    X = df.drop(columns=['High','Unnamed: 0'])
+    y = df['High'].map({'No': 0, 'Yes': 1})
     X_encoded = pd.get_dummies(X, drop_first=True)
 
-    # Initialiser et entraîner l'arbre de décision avec une profondeur maximale de 2
-    dt = DecisionTree(max_depth=2)
-    dt.fit(X_encoded, y)
+    X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.3, random_state=42)
 
-    new_data = pd.DataFrame({
-        'Température': ['Chaud', 'Froid'],
-        'Humidité': ['Normale', 'Haute'],
-        'Vent': ['Oui', 'Non']
-    })
+    rf = RandomForest(n_estimators= 5, max_features='log2')
+    rf.fit(X_train,y_train)
 
-    new_data_encoded = pd.get_dummies(new_data, drop_first=True)
+    predictions = rf.predict(X_test)
 
-    predictions = dt.predict(new_data_encoded)
-    print(predictions)
+    print(accuracy_score(y_test, predictions))
