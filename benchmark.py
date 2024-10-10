@@ -34,19 +34,20 @@ from ML.SVM.supportvectormachine import SupportVectorMachineCustom
 from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = {
-    "class": {
-        "SVC": "models/SVC.pkl",# modele de sklearn
-        "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",# modele par nos soins
-        "DecisionTree": "models/DecisionTreeCustom.pkl",# modele par nos soins
-        "DecisionTreeCustom": "models/DecisionTreeCustom.pkl",# modele par nos soins
-        "RandomForest": "models/RandomForest.pkl",  # modele de sklearn
-        "RandomForestCustom": "models/RandomForestCustom.pkl"# modele par nos soins
-    },
+    #"class": {
+    #     "SVC": "models/SVC.pkl",  # modele de sklearn
+    #     "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",  # notre modele
+    #     "DecisionTree": "models/DecisionTreeClassifier.pkl", # modele de sklearn
+    #     "DecisionTreeCustom": "models/DecisionTree.pkl",  # modele par nos soins
+    #     "RandomForest": "models/RandomForestClassifier.pkl",  # modele de sklearn
+    #     "RandomForestCustom": "models/RandomForest.pkl"  # notre modele
+    # },
     "regr": {
-        "Lasso": "models/Lasso.pkl",# modele de sklearn
-        "LassoCustom": "models/LassoCustom.pkl",# modele par nos soins
-        "Ridge": "models/Ridge.pkl",# modele de sklearn
-        "RidgeCustom": "models/RidgeCustom.pkl"# modele par nos soins
+        "Lasso": "models/Lasso.pkl",  # modele de sklearn
+        "LassoCustom": "models/LassoRegressionCustom.pkl",  # modele par nos soins
+        "Ridge": "models/Ridge.pkl",  # modele de sklearn
+        "RidgeCustom": "models/RidgeRegressionCustom.pkl"  # modele par nos soins
+
     }
 }
 
