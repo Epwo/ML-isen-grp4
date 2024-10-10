@@ -5,11 +5,11 @@ import time
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score,
-                             mean_absolute_error, mean_squared_error, r2_score,
-                             root_mean_squared_error)
+                             mean_absolute_error, mean_squared_error, r2_score)
 from sklearn.preprocessing import (MinMaxScaler, Normalizer,
                                    QuantileTransformer, StandardScaler)
 
@@ -52,27 +52,27 @@ model_list = [
      "type": "regr"}
 ]
 
-# model_list = [
-    # {"model": DecisionTreeClassifier, 
-    #  "params": {"max_depth": [1, 2, 3, 4, 5, 10], "criterion": ["gini", "entropy"]}, 
-    #  "type": "class"},
+model_list = [
+    {"model": DecisionTreeClassifier, 
+     "params": {"max_depth": [1, 2, 3, 4, 5, 10], "criterion": ["gini", "entropy"]}, 
+     "type": "class"},
     
-    # {"model": DecisionTree, 
-    #  "params": {"max_depth": [1, 2, 3, 4, 5, 10]}, 
-    #  "type": "class"},
+    {"model": DecisionTree, 
+     "params": {"max_depth": [1, 2, 3, 4, 5, 10]}, 
+     "type": "class"},
     
-    # {"model": SVC, 
-    #  "params": {"kernel": ["linear", "rbf", "poly"], "random_state": [42, 123, 2024]}, 
-    #  "type": "class"},
+    {"model": SVC, 
+     "params": {"kernel": ["linear", "rbf", "poly"], "random_state": [42, 123, 2024]}, 
+     "type": "class"},
     
-    # {"model": SupportVectorMachineCustom, 
-    #  "params": {"learning_rate": [0.05], "lambda_param": [0.01], "n_iters": [2000]}, 
-    #  "type": "class"},
+    {"model": SupportVectorMachineCustom, 
+     "params": {"learning_rate": [0.05], "lambda_param": [0.01], "n_iters": [2000]}, 
+     "type": "class"},
     
-    # {"model": RandomForestClassifier, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"},
+    {"model": RandomForestClassifier, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"},
 
-    # {"model": RandomForestCustom, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"}
-# ]
+    {"model": RandomForestCustom, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"}
+]
 
 
 scalers = [Normalizer(), MinMaxScaler(), StandardScaler(), QuantileTransformer()]
@@ -128,7 +128,7 @@ class Runner:
                     if model_info["type"] == "regr":
                         mae = mean_absolute_error(y_true, y_pred)
                         mse = mean_squared_error(y_true, y_pred)
-                        rmse = mean_squared_error(y_true, y_pred, squared=False)  # Correction pour rmse
+                        rmse = RMSE(y_true, y_pred)  # Correction pour rmse
                         r2 = r2_score(y_true, y_pred)
                         if model_info['model'].__name__ not in best_models or r2 > best_models[model_info['model'].__name__]['R2_Score']:
                             best_models[model_info['model'].__name__] = {
@@ -159,7 +159,8 @@ class Runner:
         keys = param_dist.keys()
         values = [param_dist[key] for key in keys]
         return [dict(zip(keys, v)) for v in product(*values)]
-
+def RMSE(y_true,y_pred):
+    return np.sqrt(np.mean((y_true - y_pred) ** 2))
 if __name__ == "__main__":
     runner = Runner()
     runner.run()
