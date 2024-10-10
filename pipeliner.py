@@ -24,8 +24,6 @@ from sklearn.linear_model import Lasso, Ridge
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-# Imports custom functions
-from ML.arbres.main import DecisionTree
 # imports customs functions
 from ML.forets.arbre import DecisionTree
 from ML.forets.foret import RandomForest as RandomForestCustom
@@ -33,46 +31,46 @@ from ML.regLasso.main import LassoRegressionCustom
 from ML.regRidge.main import RidgeRegressionCustom
 from ML.SVM.supportvectormachine import SupportVectorMachineCustom
 from Pretreatment.ModelTrainer import ModelTrainer
+#
+# model_list = [
+#     {"model": LassoRegressionCustom,
+#      "params": {"alpha": [0.01, 0.1, 1, 10, 100]},
+#      "type": "regr"},
+#
+#     {"model": RidgeRegressionCustom,
+#      "params": {"alpha": [0.01, 0.1, 1, 10, 100]},
+#      "type": "regr"},
+#
+#     {"model": Lasso,
+#      "params": {"alpha": [0.01, 0.1, 1, 10, 100]},
+#      "type": "regr"},
+#
+#     {"model": Ridge,
+#      "params": {"alpha": [0.01, 0.1, 1, 10, 100]},
+#      "type": "regr"}
+# ]
 
 model_list = [
-    {"model": LassoRegressionCustom, 
-     "params": {"alpha": [0.01, 0.1, 1, 10, 100]}, 
-     "type": "regr"},
+    {"model": DecisionTreeClassifier,
+     "params": {"max_depth": [1, 2, 3, 4, 5, 10], "criterion": ["gini", "entropy"]},
+     "type": "class"},
     
-    {"model": RidgeRegressionCustom, 
-     "params": {"alpha": [0.01, 0.1, 1, 10, 100]}, 
-     "type": "regr"},
+    {"model": DecisionTree,
+     "params": {"max_depth": [1, 2, 3, 4, 5, 10]},
+     "type": "class"},
     
-    {"model": Lasso, 
-     "params": {"alpha": [0.01, 0.1, 1, 10, 100]}, 
-     "type": "regr"},
+    {"model": SVC,
+     "params": {"kernel": ["linear", "rbf", "poly"], "random_state": [42, 123, 2024]},
+     "type": "class"},
     
-    {"model": Ridge, 
-     "params": {"alpha": [0.01, 0.1, 1, 10, 100]}, 
-     "type": "regr"}
+    {"model": SupportVectorMachineCustom,
+     "params": {"learning_rate": [0.05], "lambda_param": [0.01], "n_iters": [2000]},
+     "type": "class"},
+    
+    {"model": RandomForestClassifier, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"},
+
+    {"model": RandomForestCustom, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"}
 ]
-
-# model_list = [
-    # {"model": DecisionTreeClassifier, 
-    #  "params": {"max_depth": [1, 2, 3, 4, 5, 10], "criterion": ["gini", "entropy"]}, 
-    #  "type": "class"},
-    
-    # {"model": DecisionTree, 
-    #  "params": {"max_depth": [1, 2, 3, 4, 5, 10]}, 
-    #  "type": "class"},
-    
-    # {"model": SVC, 
-    #  "params": {"kernel": ["linear", "rbf", "poly"], "random_state": [42, 123, 2024]}, 
-    #  "type": "class"},
-    
-    # {"model": SupportVectorMachineCustom, 
-    #  "params": {"learning_rate": [0.05], "lambda_param": [0.01], "n_iters": [2000]}, 
-    #  "type": "class"},
-    
-    # {"model": RandomForestClassifier, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"},
-
-    # {"model": RandomForestCustom, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"}
-# ]
 
 
 scalers = [Normalizer(), MinMaxScaler(), StandardScaler(), QuantileTransformer()]
