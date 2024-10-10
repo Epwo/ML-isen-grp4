@@ -17,7 +17,6 @@ from ConfigLoader import ConfigLoader
 class ModelTrainer(ConfigLoader):
     def __init__(self):
         super().__init__()
-        self.dataframe = self.get_dataframe()
         self.target = self.config["target"]
 
     def categorize(self,data):
@@ -31,7 +30,12 @@ class ModelTrainer(ConfigLoader):
         file_path = os.path.join(PROJECT_PATH,'data',self.config["files"])
         delimiter = self.config["delimiter"]
         return pd.read_csv(file_path,delimiter=delimiter)
-
+    
+    def get_dataframe_test(self):
+        file_path = os.path.join(PROJECT_PATH,'data',"Hitters_test.csv")
+        delimiter = self.config["delimiter"]
+        return pd.read_csv(file_path,delimiter=delimiter)
+    
     def get_train_test_split(self, df):
         """
         Split the dataframe into training and testing datasets.
@@ -52,13 +56,17 @@ class ModelTrainer(ConfigLoader):
             return x_data, y_data
         return x_data
 
-
+    def scratch_seuil(self,df):
+        df['Salary'] = df['Salary'].apply(lambda x: 'Yes' if x > 425 else 'No')
+        return df
+    
     def process_data(self):
         """
         Process the data and train the model, returning the scaled training and testing data.
         """
-        self.get_dataframe()
-        df = self.categorize(self.dataframe.dropna())
+
+        df = self.categorize(self.get_dataframe().dropna())
+
         data_train, data_test = self.get_train_test_split(df)
 
         x_train, y_train = self.prepare_data(data_train, is_train=True)
