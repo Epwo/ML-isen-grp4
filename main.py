@@ -72,19 +72,18 @@ class Runner:
                                 "f1_score": f1
                             }
 
-                    # if model_info["type"] == "regr":
-                    #     # Store results
-                    #     mae = mean_absolute_error(y_true, y_pred)
-                    #     mse = mean_squared_error(y_true, y_pred)
-                    #     r2 = r2_score(y_true, y_pred)
-                    #     print(f"{nameModel} - time {elapsed}")
-                    #     results.append({
-                    #         "Model": nameModel,
-                    #         "MAE": mae,
-                    #         "MSE": mse,
-                    #         "R2 Score": r2,
-                    #         "time": elapsed
-                    #     })
+                    if model_info["type"] == "regr":
+                        # Store results
+                        mae = mean_absolute_error(y_true, y_pred)
+                        mse = mean_squared_error(y_true, y_pred)
+                        r2 = r2_score(y_true, y_pred)
+                        if type_model not in best_models or r2 > best_models[model_info['model'].__name__]['Accuracy']:
+                            best_models[model_info['model'].__name__].append({
+                                "Model": model_info['model'].__name__,
+                                "MAE": mae,
+                                "MSE": mse,
+                                "R2 Score": r2
+                            })
 
         # Export the best model information to a CSV file
         best_models_df = pd.DataFrame(best_models.values())
