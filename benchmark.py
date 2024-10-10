@@ -120,7 +120,7 @@ class Runner:
                 plt.savefig(f"figs/corrMat.png")
                 print("Correlation matrix exported to 'corrMat.png'.")
 
-        # Create a DataFrame from the results and export to CSV
+        # Creating a DataFrame from the results and export to a CSV
         results_df = pd.DataFrame(results)
         if os.path.isfile("model_comparison_results.csv"):
             os.remove("model_comparison_results.csv")
