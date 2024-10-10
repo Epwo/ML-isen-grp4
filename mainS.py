@@ -25,6 +25,7 @@ from sklearn.linear_model import Lasso, Ridge
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from ML.forets.foret import RandomForest
 
 # imports customs functions
 from ML.regLasso.main import LassoRegressionCustom
@@ -34,15 +35,15 @@ from ML.SVM.supportvectormachine import SupportVectorMachineCustom
 from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = [
-    {"model": LassoRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
-    #{"model": SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
-    #{"model": SupportVectorMachineCustom, "params": {"learning_rate":0.005,"lambda_param":0.01,"n_iters":2000}, "type": "class"},
+    #{"model": LassoRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
+    #{"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
+    {"model": SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
+    {"model": SupportVectorMachineCustom, "params": {"learning_rate":0.005,"lambda_param":0.01,"n_iters":2000}, "type": "class"},
     #{"model": DecisionTreeClassifier, "params": {}, "type": "class"},
-    #{"model": RandomForestClassifier, "params": {"max_depth": 2,"random_state":42}, "type": "class"},
-    #{"model": RandomForestClassifier, "params": {"max_depth": 3,"random_state":42}, "type": "class"},
+    {"model": RandomForestClassifier, "params": {"max_depth": 2,"random_state":42}, "type": "class"},
+    {"model": RandomForest, "params": {"max_depth": 2,"n_estimators":100}, "type": "class"},
 
 ]
 
