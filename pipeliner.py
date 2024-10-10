@@ -24,8 +24,6 @@ from sklearn.linear_model import Lasso, Ridge
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-# Imports custom functions
-from ML.arbres.main import DecisionTree
 # imports customs functions
 from ML.forets.arbre import DecisionTree
 from ML.forets.foret import RandomForest as RandomForestCustom

@@ -35,20 +35,20 @@ from ML.SVM.supportvectormachine import SupportVectorMachineCustom
 from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = {
-    # "class": {
-    #     "SVC": "models/SVC.pkl",  # modele de sklearn
-    #     "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",  # modele par nos soins
-    #     "DecisionTree": "models/DecisionTreeCustom.pkl",  # modele par nos soins
-    #     "DecisionTreeCustom": "models/DecisionTreeCustom.pkl",  # modele par nos soins
-    #     "RandomForest": "models/RandomForest.pkl",  # modele de sklearn
-    #     "RandomForestCustom": "models/RandomForestCustom.pkl"  # modele par nos soins
-    # },
-    "regr": {
-        "Lasso": "models/Lasso.pkl",  # modele de sklearn
-        "LassoCustom": "models/LassoRegressionCustom.pkl",  # modele par nos soins
-        "Ridge": "models/Ridge.pkl",  # modele de sklearn
-        "RidgeCustom": "models/RidgeRegressionCustom.pkl"  # modele par nos soins
-    }
+    "class": {
+        "SVC": "models/SVC.pkl",  # modele de sklearn
+        "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",  # notre modele
+        "DecisionTree": "models/DecisionTreeClassifier.pkl", # modele de sklearn
+        "DecisionTreeCustom": "models/DecisionTree.pkl",  # modele par nos soins
+        #"RandomForest": "models/RandomForestClassifier.pkl",  # modele de sklearn
+        #"RandomForestCustom": "models/RandomForest.pkl"  # notre modele
+    },
+    # "regr": {
+    #     "Lasso": "models/Lasso.pkl",  # modele de sklearn
+    #     "LassoCustom": "models/LassoRegressionCustom.pkl",  # modele par nos soins
+    #     "Ridge": "models/Ridge.pkl",  # modele de sklearn
+    #     "RidgeCustom": "models/RidgeRegressionCustom.pkl"  # modele par nos soins
+    # }
 }
 
 
@@ -115,7 +115,7 @@ class Runner:
                     plt.figure(figsize=(10, 8))
                     sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
                     plt.title('Correlation Matrix of Training Features')
-                    plt.savefig(f"figs/corrMat.png")
+                    plt.savefig("figs/corrMat.png")
                     print("Correlation matrix exported to 'corrMat.png'.")
 
                 print("--")
