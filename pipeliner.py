@@ -1,5 +1,5 @@
-import itertools  # Importer itertools pour les combinaisons de paramètres
 import os
+import pickle
 import sys
 import time
 from pathlib import Path
@@ -7,7 +7,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score,
                              mean_absolute_error, mean_squared_error, r2_score)
 from sklearn.preprocessing import (MinMaxScaler, Normalizer,
@@ -24,8 +23,6 @@ from sklearn.linear_model import Lasso, Ridge
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-# Imports custom functions
-from ML.arbres.main import DecisionTree
 # imports customs functions
 from ML.forets.arbre import DecisionTree
 from ML.forets.foret import RandomForest as RandomForestCustom
@@ -76,9 +73,6 @@ model_list = [
 
 
 scalers = [Normalizer(), MinMaxScaler(), StandardScaler(), QuantileTransformer()]
-
-import os
-import pickle
 
 
 class Runner:
