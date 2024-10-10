@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 import time
 import os
+import pickle
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -35,21 +36,20 @@ from Pretreatment.ModelTrainer import ModelTrainer
 
 model_list = {
     "class": {
-        "SVC": "models/SVC.pkl",# modele de sklearn
-        "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",# modele par nos soins
-        "DecisionTree": "models/DecisionTreeCustom.pkl",# modele par nos soins
-        "DecisionTreeCustom": "models/DecisionTreeCustom.pkl",# modele par nos soins
+        "SVC": "models/SVC.pkl",  # modele de sklearn
+        "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",  # modele par nos soins
+        "DecisionTree": "models/DecisionTreeCustom.pkl",  # modele par nos soins
+        "DecisionTreeCustom": "models/DecisionTreeCustom.pkl",  # modele par nos soins
         "RandomForest": "models/RandomForest.pkl",  # modele de sklearn
-        "RandomForestCustom": "models/RandomForestCustom.pkl"# modele par nos soins
+        "RandomForestCustom": "models/RandomForestCustom.pkl"  # modele par nos soins
     },
     "regr": {
-        "Lasso": "models/Lasso.pkl",# modele de sklearn
-        "LassoCustom": "models/LassoCustom.pkl",# modele par nos soins
-        "Ridge": "models/Ridge.pkl",# modele de sklearn
-        "RidgeCustom": "models/RidgeCustom.pkl"# modele par nos soins
+        "Lasso": "models/Lasso.pkl",  # modele de sklearn
+        "LassoCustom": "models/LassoCustom.pkl",  # modele par nos soins
+        "Ridge": "models/Ridge.pkl",  # modele de sklearn
+        "RidgeCustom": "models/RidgeCustom.pkl"  # modele par nos soins
     }
 }
-
 
 
 class Runner:
@@ -60,12 +60,12 @@ class Runner:
         x_train, y_train, x_test, y_true = self.model_trainer.process_data()
         results = []
 
-        for model_info in model_list:
+        for model_type in model_list:
+            for model_name, model_path in model_list[model_type].items():
+                print(f"Running {model_name}..., type: {model_type}, model_path: {model_path}")
+                with open(model_path, 'rb') as file:
+                    model = pickle.load(file)
 
-            model_class = model_info["model"]
-            params = model_info.get("params", {})
-
-            model = model_class(**params)
             # start time
             startT = time.time()
 
@@ -74,26 +74,25 @@ class Runner:
             # calculate metrics
             elapsed = time.time() - startT
 
-            nameModel = model_class.__name__
-            if model_info["type"] == "regr":
+            if model_type == "regr":
                 # Store results
                 mae = mean_absolute_error(y_true, y_pred)
                 mse = mean_squared_error(y_true, y_pred)
                 r2 = r2_score(y_true, y_pred)
-                print(f"{nameModel} - time {elapsed}")
+                print(f"{model_name} - time {elapsed}")
                 results.append({
-                    "Model": nameModel,
+                    "Model": model_name,
                     "MAE": mae,
                     "MSE": mse,
                     "R2 Score": r2,
                     "time": elapsed
                 })
-            elif model_info["type"] == "class":
+            elif model_type == "class":
                 acc = accuracy_score(y_true, y_pred)
                 f1 = f1_score(y_true, y_pred, average='weighted')
                 conf_mat = confusion_matrix(y_true, y_pred)
                 results.append({
-                    "Model": nameModel,
+                    "Model": model_name,
                     "accuracy": acc,
                     "f1_score": f1,
                     "time": elapsed
@@ -103,9 +102,9 @@ class Runner:
                 sns.heatmap(conf_mat, annot=True, fmt='d', cmap='Blues')
                 plt.xlabel('Predicted')
                 plt.ylabel('Actual')
-                plt.title(f'Confusion Matrix - {nameModel}')
-                plt.savefig(f'figs/confusion_matrix_{nameModel}.png')
-                print(f"Confusion matrix for {nameModel} exported to 'confusion_matrix_{nameModel}.png'.")
+                plt.title(f'Confusion Matrix - {model_name}')
+                plt.savefig(f'figs/confusion_matrix_{model_name}.png')
+                print(f"Confusion matrix for {model_name} exported to 'confusion_matrix_{model_name}.png'.")
 
                 # Select only numeric features for the correlation matrix
                 x_train_trans = self.model_trainer.dataframe.drop(columns=[self.model_trainer.target])
