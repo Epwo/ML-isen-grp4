@@ -10,7 +10,7 @@ model_groups = {
     'SVC_Group': ['SVC', 'SupportVectorMachineCustom'],
     'Ridge_Group': ['Ridge', 'RidgeRegressionCustom'],
     'Lasso_Group': ['Lasso', 'LassoRegressionCustom'],
-    'DecisionTree_Group': ['DecisionTreeCustom','DecisionTree'],
+    'DecisionTree_Group': ['DecisionTreeClassifier']
 }
 
 # Normalize the data
