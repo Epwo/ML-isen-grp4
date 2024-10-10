@@ -22,3 +22,7 @@ Il faudra également mettre en commentaire, la liste des modeles que nous n'allo
 Nous comparerons également nos implémentations en termes de temps d'exécution et de performance avec celles de la bibliothèque scikit-learn. Cela nous permettra de comprendre les avantages et les inconvénients de nos implémentations par rapport aux solutions standard.  
 ## Structure du Projet
 ![assets/structure.png](assets/archi-projetML.png)
+## Lancer le projet
+Il suffit de lancer le script pipeliner.py en premier lieu
+puis benchmark.py pour voir les résultats des algorithmes implémentés.
+Et pour finir, le plot.py afin de voir les graphs etc
