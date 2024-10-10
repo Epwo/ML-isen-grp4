@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class SupportVectorMachineCustom:
@@ -11,27 +11,42 @@ class SupportVectorMachineCustom:
         self.w = None
         self.b = None
 
-    def fit(self, X, y):
+    def fit(self, X, y, batch_size=32, decay=0.001):
         n_samples, n_features = X.shape
-        # Initialisation des poids (matrice) et du biais à 0 ainsi que les features à -1 et 1
+        # Initialisation des poids (matrice) et du biais
         self.w = np.zeros(n_features)
         self.b = 0
         y_ = np.where(y <= 0, -1, 1)
 
-        # nb de fois qu'on effectue les opérations sur la BDD
+        # Nombre total de mini-batchs
+        n_batches = n_samples // batch_size
+        # Boucle principale sur les itérations
         for g in range(self.n_iters):
-            # itération sur chaque ligne de la BDD
-            for idx, x_i in enumerate(X):
+            # Réduction progressive du learning rate
+            lr = self.learning_rate / (1 + decay * g)
 
-                condition = y_[idx] * (np.dot(x_i, self.w) - self.b) >= 1
-                # vérifie si la distance à la marge est respecté, on met alors à jour les poids
-                # les poids sont légèrement diminuer
-                if condition:
-                    self.w -= self.learning_rate * (2 * self.lambda_param * self.w)
-                # les poids sont corrigés ainsi que le biais pour déplacer l'hyperplan
+            for i in range(n_batches):
+                # Sélection d'un mini-batch aléatoire
+                idx = np.random.randint(0, n_samples, batch_size)
+                X_batch, y_batch = X[idx], y_[idx]
+
+                # Calcul du produit matriciel pour le mini-batch
+                margin = y_batch * (np.dot(X_batch, self.w) - self.b)
+
+                # Sélection des exemples mal classés dans le mini-batch
+                misclassified = np.where(margin < 1)[0]
+                if misclassified.size > 0:
+                    X_misclassified = X_batch[misclassified]
+                    y_misclassified = y_batch[misclassified]
+
+                    # Mise à jour des poids et du biais pour les exemples mal classés
+                    self.w -= lr * (2 * self.lambda_param * self.w - np.dot(X_misclassified.T, y_misclassified))
+                    self.b -= lr * np.sum(y_misclassified)
+
+                # Réduction des poids pour les exemples bien classés (régularisation L2)
                 else:
-                    self.w -= self.learning_rate * (2 * self.lambda_param * self.w - np.dot(x_i, y_[idx]))
-                    self.b -= self.learning_rate * y_[idx]
+                    self.w -= lr * 2 * self.lambda_param * self.w
+
 
     def predict(self, X):
         # Calcul de la valeur d'approximation pour chaque échantillon (produit scalaire + biais)
