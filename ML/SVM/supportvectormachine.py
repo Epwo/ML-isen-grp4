@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-class SupportVectorMachine:
+class SupportVectorMachineCustom:
     def __init__(self, learning_rate=0.005, lambda_param=0.01, n_iters=30000):
         # initialisation des paramètres d'apprentissage
         self.learning_rate = learning_rate
