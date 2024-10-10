@@ -18,6 +18,7 @@ sys.path.append(str(PROJECT_PATH))
 SRC_PATH = Path(__file__).resolve().parents[0]
 sys.path.append(str(SRC_PATH))
 
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import Lasso, Ridge
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -25,6 +26,8 @@ from sklearn.tree import DecisionTreeClassifier
 # Imports custom functions
 from ML.arbres.main import DecisionTree
 # imports customs functions
+from ML.forets.arbre import DecisionTree
+from ML.forets.foret import RandomForest as RandomForestCustom
 from ML.regLasso.main import LassoRegressionCustom
 from ML.regRidge.main import RidgeRegressionCustom
 from ML.SVM.supportvectormachine import SupportVectorMachineCustom
@@ -63,7 +66,11 @@ model_list = [
     
     {"model": SupportVectorMachineCustom, 
      "params": {"learning_rate": [0.005], "lambda_param": [0.01], "n_iters": [2000]}, 
-     "type": "class"}
+     "type": "class"},
+    
+    {"model": RandomForestClassifier, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"},
+
+    {"model": RandomForestCustom, "params": {"n_estimators": [100], "max_depth": [2]}, "type": "class"}
 ]
 
 
