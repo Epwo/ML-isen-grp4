@@ -1,3 +1,8 @@
+"""
+this file is the main Simple.
+which just runs the models and stores the results in a csv file.
+the other main, will look for the best giving results parameters, and then saves the models
+"""
 import sys
 from pathlib import Path
 
@@ -19,6 +24,8 @@ sys.path.append(str(SRC_PATH))
 from sklearn.linear_model import Lasso, Ridge
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+
 # imports customs functions
 from ML.regLasso.main import LassoRegressionCustom
 from ML.regRidge.main import RidgeRegressionCustom
@@ -31,9 +38,10 @@ model_list = [
     #{"model": RidgeRegressionCustom, "params": {"alpha": 0.01}, "type": "regr"},
     #{"model": Lasso, "params": {"alpha": 0.01}, "type": "regr"},
     #{"model": Ridge, "params": {"alpha": 0.01}, "type": "regr"},
-    {"model":SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
-    {"model":SupportVectorMachineCustom, "params": {"learning_rate":0.005,"lambda_param":0.01,"n_iters":2000}, "type": "class"},
-    {"model": DecisionTreeClassifier, "params": {}, "type": "class"}
+    {"model": SVC, "params": {"kernel":"linear","random_state":42}, "type": "class"},
+    {"model": SupportVectorMachineCustom, "params": {"learning_rate":0.005,"lambda_param":0.01,"n_iters":2000}, "type": "class"},
+    {"model": DecisionTreeClassifier, "params": {}, "type": "class"},
+    {"model": RandomForestClassifier, "params": {"max_depth": 2,"random_state":42}, "type": "class"}
 
 ]
 
