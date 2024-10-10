@@ -2,11 +2,7 @@ from arbre import DecisionTree
 import numpy as np
 import pandas as pd
 import math
-# from sklearn.preprocessing import LabelEncoder
-# from sklearn.model_selection import train_test_split
-# from sklearn.metrics import accuracy_score
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.tree import DecisionTreeClassifier
+
 
 # notes : 
 
