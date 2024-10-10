@@ -107,13 +107,12 @@ class Runner:
                         acc = accuracy_score(y_true, y_pred)
                         f1 = f1_score(y_true, y_pred, average='weighted')
                         # Update the best model if current accuracy is better
-                        if type_model not in best_models or acc > best_models[model_info['model'].__name__]['Accuracy']:
+                        if model_info['model'].__name__ not in best_models or acc > best_models[model_info['model'].__name__]['Accuracy']:
                             best_models[model_info['model'].__name__] = {
                                 "Model": model_info['model'].__name__,
                                 "Scaler": scaler.__class__.__name__,
                                 "Params": param_values,
                                 "Accuracy": acc,
-                                "accuracy": acc,
                                 "f1_score": f1
                             }
 
@@ -122,7 +121,7 @@ class Runner:
                         mae = mean_absolute_error(y_true, y_pred)
                         mse = mean_squared_error(y_true, y_pred)
                         r2 = r2_score(y_true, y_pred)
-                        if type_model not in best_models or r2 > best_models[model_info['model'].__name__]['R2_Score']:
+                        if model_info['model'].__name__ not in best_models or r2 > best_models[model_info['model'].__name__]['R2_Score']:
                             best_models[model_info['model'].__name__] = {
                                 "Model": model_info['model'].__name__,
                                 "MAE": mae,
