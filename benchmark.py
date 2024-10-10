@@ -37,18 +37,18 @@ from Pretreatment.ModelTrainer import ModelTrainer
 model_list = {
     "class": {
         "SVC": "models/SVC.pkl",  # modele de sklearn
-        "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",  # modele par nos soins
-        "DecisionTree": "models/DecisionTreeCustom.pkl",  # modele par nos soins
-        "DecisionTreeCustom": "models/DecisionTreeCustom.pkl",  # modele par nos soins
-        "RandomForest": "models/RandomForest.pkl",  # modele de sklearn
-        "RandomForestCustom": "models/RandomForestCustom.pkl"  # modele par nos soins
+        "SupportVectorMachine": "models/SupportVectorMachineCustom.pkl",  # notre modele
+        "DecisionTree": "models/DecisionTreeClassifier.pkl", # modele de sklearn
+        "DecisionTreeCustom": "models/DecisionTree.pkl",  # modele par nos soins
+        #"RandomForest": "models/RandomForestClassifier.pkl",  # modele de sklearn
+        #"RandomForestCustom": "models/RandomForest.pkl"  # notre modele
     },
-    "regr": {
-        "Lasso": "models/Lasso.pkl",  # modele de sklearn
-        "LassoCustom": "models/LassoCustom.pkl",  # modele par nos soins
-        "Ridge": "models/Ridge.pkl",  # modele de sklearn
-        "RidgeCustom": "models/RidgeCustom.pkl"  # modele par nos soins
-    }
+    # "regr": {
+    #     "Lasso": "models/Lasso.pkl",  # modele de sklearn
+    #     "LassoCustom": "models/LassoRegressionCustom.pkl",  # modele par nos soins
+    #     "Ridge": "models/Ridge.pkl",  # modele de sklearn
+    #     "RidgeCustom": "models/RidgeRegressionCustom.pkl"  # modele par nos soins
+    # }
 }
 
 
@@ -66,57 +66,60 @@ class Runner:
                 with open(model_path, 'rb') as file:
                     model = pickle.load(file)
 
-            # start time
-            startT = time.time()
+                # start time
+                startT = time.time()
 
-            model.fit(x_train, y_train)
-            y_pred = model.predict(x_test)
-            # calculate metrics
-            elapsed = time.time() - startT
+                model.fit(x_train, y_train)
+                y_pred = model.predict(x_test)
+                # calculate metrics
+                elapsed = time.time() - startT
 
-            if model_type == "regr":
-                # Store results
-                mae = mean_absolute_error(y_true, y_pred)
-                mse = mean_squared_error(y_true, y_pred)
-                r2 = r2_score(y_true, y_pred)
-                print(f"{model_name} - time {elapsed}")
-                results.append({
-                    "Model": model_name,
-                    "MAE": mae,
-                    "MSE": mse,
-                    "R2 Score": r2,
-                    "time": elapsed
-                })
-            elif model_type == "class":
-                acc = accuracy_score(y_true, y_pred)
-                f1 = f1_score(y_true, y_pred, average='weighted')
-                conf_mat = confusion_matrix(y_true, y_pred)
-                results.append({
-                    "Model": model_name,
-                    "accuracy": acc,
-                    "f1_score": f1,
-                    "time": elapsed
-                })
-                # Plot the confusion matrix
-                plt.figure(figsize=(10, 8))
-                sns.heatmap(conf_mat, annot=True, fmt='d', cmap='Blues')
-                plt.xlabel('Predicted')
-                plt.ylabel('Actual')
-                plt.title(f'Confusion Matrix - {model_name}')
-                plt.savefig(f'figs/confusion_matrix_{model_name}.png')
-                print(f"Confusion matrix for {model_name} exported to 'confusion_matrix_{model_name}.png'.")
+                if model_type == "regr":
+                    # Store results
+                    mae = mean_absolute_error(y_true, y_pred)
+                    mse = mean_squared_error(y_true, y_pred)
+                    r2 = r2_score(y_true, y_pred)
+                    print(f"{model_name} - time {elapsed}")
+                    results.append({
+                        "Model": model_name,
+                        "MAE": mae,
+                        "MSE": mse,
+                        "R2 Score": r2,
+                        "time": elapsed
+                    })
+                elif model_type == "class":
+                    acc = accuracy_score(y_true, y_pred)
+                    f1 = f1_score(y_true, y_pred, average='weighted')
+                    conf_mat = confusion_matrix(y_true, y_pred)
+                    results.append({
+                        "Model": model_name,
+                        "accuracy": acc,
+                        "f1_score": f1,
+                        "time": elapsed
+                    })
+                    # Plot the confusion matrix
+                    plt.figure(figsize=(10, 8))
+                    sns.heatmap(conf_mat, annot=True, fmt='d', cmap='Blues')
+                    plt.xlabel('Predicted')
+                    plt.ylabel('Actual')
+                    plt.title(f'Confusion Matrix - {model_name}')
+                    plt.savefig(f'figs/confusion_matrix_{model_name}.png')
+                    print(f"Confusion matrix for {model_name} exported to 'confusion_matrix_{model_name}.png'.")
 
-                # Select only numeric features for the correlation matrix
-                x_train_trans = self.model_trainer.dataframe.drop(columns=[self.model_trainer.target])
-                numeric_x_train = x_train_trans.select_dtypes(include=["float64", "int64"])
-                correlation_matrix = numeric_x_train.corr()
+                    # Select only numeric features for the correlation matrix
+                    x_train_trans = self.model_trainer.dataframe.drop(columns=[self.model_trainer.target])
+                    numeric_x_train = x_train_trans.select_dtypes(include=["float64", "int64"])
+                    correlation_matrix = numeric_x_train.corr()
 
-                # Plotting the correlation matrix using seaborn
-                plt.figure(figsize=(10, 8))
-                sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
-                plt.title('Correlation Matrix of Training Features')
-                plt.savefig(f"figs/corrMat.png")
-                print("Correlation matrix exported to 'corrMat.png'.")
+                    # Plotting the correlation matrix using seaborn
+                    plt.figure(figsize=(10, 8))
+                    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+                    plt.title('Correlation Matrix of Training Features')
+                    plt.savefig("figs/corrMat.png")
+                    print("Correlation matrix exported to 'corrMat.png'.")
+
+                print("--")
+                print(results)
 
         # Create a DataFrame from the results and export to CSV
         results_df = pd.DataFrame(results)
